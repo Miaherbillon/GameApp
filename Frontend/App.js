@@ -96,16 +96,16 @@ const App = () => {
           </Tab.Screen>
           <Tab.Screen
             name="Moi"
-            // component={Compte}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
                 <FontAwesome5 name="user" size={size} color={color} />
               ),
             }}
-          />
-          {() => <Compte setReload={setReload} reload={reload} setUserId={setUserId} />}
 
+          >
+            {() => <Compte setReload={setReload} reload={reload} setUserId={setUserId} />}
+          </Tab.Screen>
         </Tab.Navigator>
       ) : (
         <Inscription setUserId={setUserId} setLoading={setLoading} />
