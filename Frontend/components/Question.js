@@ -1,67 +1,72 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import SwipeComponent from './swip';
 import axios from 'axios';
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import SwipeComponent from './swip';
-
-const Questionnaire = () => {
+const Questionnaire = ({ data }) => {
     const [questionIndex, setQuestionIndex] = useState(0);
-    const [answers, setAnswers] = useState([]);
-    const [data, setData] = useState();
-    const [text, setText] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [transformedQuestions, setTransformedQuestions] = useState([]);
 
+    console.log('data', data)
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get("http://localhost:5001/");
-                setData(response.data);
-                console.log("p")
-            } catch (error) {
-                console.log(error.message);
-            }
-        };
+        if (data && data.length > 0) {
+            const transformedQuestions = data.map(question => question.text);
+            setTransformedQuestions(transformedQuestions);
+            setQuestionIndex(0);
+            setLoading(false);
+        }
+    }, [data]);
 
-        fetchData();
-    });
-
-
-
-
-
-    const questions = [
-        {
-            question: 'Question 1:' + '\n' + 'Aimez-vous le chocolat ?'
-        },
-        { question: 'Question 2:' + '\n' + ' Avez-vous des animaux domestiques ?' },
-        // Ajoutez d'autres questions ici
-    ];
-
-    const handleAnswer = (reponse) => {
-        setAnswers([...answers, reponse]);
-        setQuestionIndex(questionIndex + 1);
+    const handleAnswer = async (isLike, questionId) => {
+        try {
+            setLoading(true);
+            const response = await axios.post('http://192.168.1.155:5001/repondre', {
+                questionId: questionId,
+                answer: isLike ? 'oui' : 'non',
+            });
+            console.log('reponse', response.data);
+            setQuestionIndex(questionIndex + 1);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error:', error);
+            setError('Une erreur est survenue lors de l\'enregistrement de la réponse');
+            setLoading(false);
+        }
     };
 
-    const currentQuestion = questions[questionIndex];
+    const currentQuestion = transformedQuestions[questionIndex];
+
+    if (error) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>{error}</Text>
+            </View>
+        );
+    }
 
     if (!currentQuestion) {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>Toutes les questions ont été répondues.</Text>
-                <Text style={styles.text}>Réponses enregistrées : {answers.join(', ')}</Text>
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.questionText}>{currentQuestion.question}</Text>
-            <SwipeComponent
-                onYes={() => handleAnswer(currentQuestion.reponse)}
-                onNo={() => handleAnswer('non')}
-            />
-            <TouchableOpacity onPress={() => handleAnswer('non')}>
-            </TouchableOpacity>
+            {!loading && (
+                <>
+                    <SwipeComponent
+                        questionText={currentQuestion}
+                        onYes={() => handleAnswer(true, data[questionIndex]._id)}
+                        onNo={() => handleAnswer(false, data[questionIndex]._id)}
+                    />
+                    <Text style={styles.question}>{currentQuestion}</Text>
+                </>
+            )}
         </View>
     );
 };
@@ -71,19 +76,29 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+
+
     },
-    questionText: {
+    text: {
+        fontSize: 18,
+        marginBottom: 150,
+    },
+    question: {
         textAlign: 'center',
-        fontSize: 24,
-        lineHeight: 100,
+        fontSize: 30,
         fontWeight: 'bold',
+        marginBottom: 50,
+        padding: 10,
+        borderColor: 'black',
+        borderWidth: 2,
+        backgroundColor: 'white'
     },
-    buttonText: {
-        fontSize: 20,
-        color: 'blue',
-        textDecorationLine: 'underline',
+    errorText: {
+        fontSize: 18,
+        color: 'red',
     },
 });
 
 export default Questionnaire;
+
+

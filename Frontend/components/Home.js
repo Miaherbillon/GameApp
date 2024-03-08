@@ -1,13 +1,11 @@
 import { StyleSheet, Text, View, ScrollView, ImageBackground } from 'react-native';
-import Img from '../img/2.jpg';
-
-
+import Img from '../img/4.jpg';
 
 export default function Home() {
 
 
     return <View style={styles.container}>
-        <Text style={styles.Titre}>Bienvenue sur "Oui-Non"</Text>
+        <Text style={styles.Titre}>Jeux des questions</Text>
 
         <ImageBackground source={Img} style={styles.image} />
         <ScrollView >
@@ -39,41 +37,45 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 50,
-        backgroundColor: 'rgb(55, 114, 163)',
+        backgroundColor: 'rgb(30, 30, 30)',
 
     },
     Titre: {
         textAlign: 'center',
-        color: 'rgb(55, 114, 163)',
-        paddingTop: 20,
-        padding: 70,
-        paddingBottom: 40,
-        fontSize: 40,
-        lineHeight: 80,
+        color: 'black',
+        paddingTop: 100,
+        padding: 40,
+        paddingBottom: 100,
+        lineHeight: 70,
+        fontSize: 50,
         zIndex: 1,
-        borderBottomColor: 'rgb(182, 215, 184)',
+        // borderBottomColor: 'rgb(53, 11, 181)',
         borderBottomWidth: 20,
-
-
-
+        fontWeight: 'bold',
 
     },
     explication: {
         gap: 20,
         fontSize: 20,
-        backgroundColor: 'rgb(55, 114, 163)',
-        color: 'white',
-        padding: 20
+        backgroundColor: 'white',
+        paddingTop: 30,
+
     },
 
-    explicationText: { color: 'white' },
+    explicationText: { color: 'black', paddingLeft: 30, paddingRight: 30 },
 
     Titre2: {
         paddingTop: 20,
+        paddingBottom: 20,
         fontSize: 25,
-        lineHeight: 40,
-        color: 'white',
-        textAlign: 'center'
+        lineHeight: 50,
+        textAlign: 'center',
+        backgroundColor: 'white',
+        width: '100%',
+        flex: 1,
+        fontWeight: 'bold',
+        color: 'rgb(229, 85, 67))'
+
     },
 
     image: {
@@ -81,8 +83,8 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: '100%',
-        height: '75%',
-        resizeMode: 'cover',
+        height: '100%',
+        resizeMode: 'contain',
 
     },
 });

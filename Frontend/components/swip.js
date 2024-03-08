@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, PanResponder } from 'react-native';
 
-const SwipeComponent = ({ onYes, onNo }) => {
+import { MaterialIcons } from '@expo/vector-icons';
+
+
+const SwipeComponent = ({ questionText, onYes, onNo }) => {
     const [swipeDirection, setSwipeDirection] = useState(null);
 
     const panResponder = PanResponder.create({
@@ -9,9 +12,9 @@ const SwipeComponent = ({ onYes, onNo }) => {
         onPanResponderMove: (_, gestureState) => {
             const { dx } = gestureState;
             if (dx > 0) {
-                setSwipeDirection('right');
-            } else {
                 setSwipeDirection('left');
+            } else {
+                setSwipeDirection('right');
             }
         },
         onPanResponderRelease: (_, gestureState) => {
@@ -28,8 +31,9 @@ const SwipeComponent = ({ onYes, onNo }) => {
     return (
         <View {...panResponder.panHandlers} style={styles.container}>
             <Text style={styles.text}>
-                {swipeDirection === 'right' ? 'Oui' : swipeDirection === 'left' ? 'Non' : 'Swipe pour choisir ' + '\n' + 'Oui / Non'}
+                {swipeDirection === 'right' ? 'Oui' : swipeDirection === 'left' ? 'Non' : 'Oui            Non'}
             </Text>
+            <MaterialIcons name="swipe" size={80} color="brgb(98, 183, 200)" />
         </View>
     );
 };
@@ -40,13 +44,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        padding: 40,
+
+
     },
     text: {
-        textAlign:'center',
-        lineHeight:60,
-        fontSize: 24,
+        textAlign: 'center',
+        fontSize: 40,
         fontWeight: 'bold',
+        marginBottom: 80
+
     },
 });
 
